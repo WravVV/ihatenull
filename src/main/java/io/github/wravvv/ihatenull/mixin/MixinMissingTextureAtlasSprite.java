@@ -14,7 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static io.github.wravvv.ihatenull.Ihatenull.LOGGER;
+import static io.github.wravvv.ihatenull.Ihatenull.*;
 
 @Mixin(MissingTextureAtlasSprite.class)
 public class MixinMissingTextureAtlasSprite {
@@ -31,28 +31,29 @@ public class MixinMissingTextureAtlasSprite {
 
                 try (InputStream configStream = Ihatenull.class.getResourceAsStream("/null.png")){
                     if (configStream != null) {
-                        LOGGER.info("IHateNull >> Default null.png taken from: /null.png");
+                        LOGGER.info("{} >> Default null.png taken from: /null.png", MODNAME);
                         ImageIO.write(ImageIO.read(configStream),"png",textureFile);
                     } else {
-                        LOGGER.info("IHateNull >> Default null.png Resource not found");
+                        LOGGER.info("{} >> Default null.png Resource not found", MODNAME);
                     }
                 } catch (Exception e) {
-                    LOGGER.error("IHateNull >> Error setting default");
+                    LOGGER.error("{} >> Error setting default", MODNAME);
                     LOGGER.error(e.getMessage());
                 }
 
             }
         } catch (IOException e) {
-            LOGGER.error("IHateNull >> Error setting up config");
+            LOGGER.error("{} >> Error setting up config", MODNAME);
             LOGGER.error(e.getMessage());
         }
         try {
             nullTexture = ImageIO.read(textureFile);
         } catch (Exception e) {
-            LOGGER.error("IHateNull >> Error loading texture");
+            LOGGER.error("{} >> Error loading texture", MODNAME);
             LOGGER.error(e.getMessage());
         }
-        LOGGER.info("IHateNull >> Texture empty? " + (nullTexture==null));
+        LOGGER.info("{} >> Texture empty? {}", MODNAME, (nullTexture == null));
+
 
         NativeImage missingTexture;
         if (nullTexture == null){
