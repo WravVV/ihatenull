@@ -25,7 +25,7 @@ base {
 }
 
 java {
-    toolchain.languageVersion = JavaLanguageVersion.of(17)
+    toolchain.languageVersion = JavaLanguageVersion.of(21)
 }
 
 minecraft {
@@ -58,7 +58,7 @@ minecraft {
     // The folder name can be set on a run configuration using the "folderName" property.
     // By default, the folder name of a run configuration is the name of the Gradle project containing it.
     // generateRunFolders = true
-
+    reobf=false
     // This property enables access transformers for use in development.
     // They will be applied to the Minecraft artifact.
     // The access transformer file can be anywhere in the project.
@@ -199,7 +199,7 @@ tasks.named('jar', Jar).configure {
     }
 
     // This is the preferred method to reobfuscate your jar file
-    finalizedBy 'reobfJar'
+    //finalizedBy 'reobfJar'
 }
 
 tasks.withType(JavaCompile).configureEach {

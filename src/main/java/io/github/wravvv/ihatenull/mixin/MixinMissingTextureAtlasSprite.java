@@ -19,7 +19,11 @@ import static io.github.wravvv.ihatenull.Ihatenull.*;
 @Mixin(MissingTextureAtlasSprite.class)
 public class MixinMissingTextureAtlasSprite {
 
-    @Inject(at=@At(value="HEAD"),method= "generateMissingImage(II)Lcom/mojang/blaze3d/platform/NativeImage;",cancellable = true)
+    static {
+        System.out.println("[Mixin] Loaded class: MixinMissingTextureAtlasSprite");
+    }
+
+    @Inject(at=@At(value="HEAD"),method= "generateMissingImage",remap=false,cancellable = true)
     private static void generateMissingImage(int p_249811_, int p_249362_, CallbackInfoReturnable<NativeImage> cir){
         cir.cancel();
 
