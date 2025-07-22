@@ -16,14 +16,10 @@ import java.io.InputStream;
 
 import static io.github.wravvv.ihatenull.Ihatenull.*;
 
-@Mixin(MissingTextureAtlasSprite.class)
+@Mixin(value = MissingTextureAtlasSprite.class,remap = false)
 public class MixinMissingTextureAtlasSprite {
 
-    static {
-        System.out.println("[Mixin] Loaded class: MixinMissingTextureAtlasSprite");
-    }
-
-    @Inject(at=@At(value="HEAD"),method= "generateMissingImage",remap=false,cancellable = true)
+    @Inject(at=@At(value="HEAD",remap = false),method= "generateMissingImage",remap=false,cancellable = true)
     private static void generateMissingImage(int p_249811_, int p_249362_, CallbackInfoReturnable<NativeImage> cir){
         cir.cancel();
 
