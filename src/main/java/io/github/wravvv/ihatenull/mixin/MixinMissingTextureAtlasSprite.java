@@ -17,22 +17,25 @@ import java.io.InputStream;
 import static io.github.wravvv.ihatenull.Ihatenull.*;
 
 @Mixin(value = MissingTextureAtlasSprite.class,remap = false)
-public class MixinMissingTextureAtlasSprite {
+public abstract class MixinMissingTextureAtlasSprite {
 
     @Inject(at=@At(value="HEAD",remap = false),method= "generateMissingImage",remap=false,cancellable = true)
     private static void generateMissingImage(int p_249811_, int p_249362_, CallbackInfoReturnable<NativeImage> cir){
         cir.cancel();
 
+        //boolean impatientThread = false;
         BufferedImage nullTexture = null;
-        new File("config/ihatenull").mkdirs();
         File textureFile = new File("config/ihatenull/null.png");
-        try {
-            if (textureFile.createNewFile()) {
 
+        new File("config/ihatenull").mkdirs();
+        try {
+
+            if (textureFile.createNewFile()) {
                 try (InputStream configStream = Ihatenull.class.getResourceAsStream("/null.png")){
                     if (configStream != null) {
-                        LOGGER.info("{} >> Default null.png taken from: /null.png", MODNAME);
+                        nullTexture = ImageIO.read(Ihatenull.class.getResource("/null.png"));
                         ImageIO.write(ImageIO.read(configStream),"png",textureFile);
+                        LOGGER.info("{} >> Default null.png taken from: /null.png", MODNAME);
                     } else {
                         LOGGER.info("{} >> Default null.png Resource not found", MODNAME);
                     }
@@ -40,20 +43,26 @@ public class MixinMissingTextureAtlasSprite {
                     LOGGER.error("{} >> Error setting default", MODNAME);
                     LOGGER.error(e.getMessage());
                 }
+            } else {
+
+                if(textureFile.length() > 0) {
+                    try {
+                        nullTexture = ImageIO.read(textureFile);
+                    } catch (Exception e) {
+                        LOGGER.error("{} >> Error reading texture", MODNAME);
+                        LOGGER.error(e.getMessage());
+                    }
+                } else {
+                    nullTexture = ImageIO.read(Ihatenull.class.getResource("/null.png"));
+                }
 
             }
         } catch (IOException e) {
             LOGGER.error("{} >> Error setting up config", MODNAME);
             LOGGER.error(e.getMessage());
         }
-        try {
-            nullTexture = ImageIO.read(textureFile);
-        } catch (Exception e) {
-            LOGGER.error("{} >> Error loading texture", MODNAME);
-            LOGGER.error(e.getMessage());
-        }
-        LOGGER.info("{} >> Texture empty? {}", MODNAME, (nullTexture == null));
 
+        LOGGER.info("{} >> Texture empty? {}", MODNAME, (nullTexture == null));
 
         NativeImage missingTexture;
         if (nullTexture == null){
@@ -63,10 +72,9 @@ public class MixinMissingTextureAtlasSprite {
         }
 
         for(int i = 0; i < 16; ++i) {
-            for(int j = 0; j < 16; ++j) {
+            for (int j = 0; j < 16; ++j) {
 
                 // LOGGER.info("IHateNull >> texture empty? " + (nullTexture==null));
-
                 if (nullTexture == null){
                     if (i < 8 ^ j < 8) {
                         missingTexture.setPixelRGBA(j, i, -1);
